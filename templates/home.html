@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Barang</h1>
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            {% if product.image_url %}
+            <img src="{{ url_for('static', filename=product.image_url) }}" class="card-img-top" alt="{{ product.name }}" onclick="showImage(this.src)">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description }}</p>
+                <p class="card-text">Stock: {{ product.stock }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="imageModal" class="modal" onclick="hideImage()">
+    <span class="close" onclick="hideImage()">&times;</span>
+    <img class="modal-content" id="modalImage" alt="Product Image">
+</div>
+
+<script>
+    function showImage(src) {
+        var modal = document.getElementById("imageModal");
+        var modalImage = document.getElementById("modalImage");
+        modal.style.display = "block";
+        modalImage.src = src;
+
+        // Tambahkan kelas show untuk memicu transisi
+        setTimeout(() => {
+            modal.classList.add("show");
+        }, 10);
+    }
+
+    function hideImage() {
+        var modal = document.getElementById("imageModal");
+        modal.classList.remove("show");
+
+        // Sembunyikan modal setelah transisi selesai
+        setTimeout(() => {
+            modal.style.display = "none";
+        }, 500);
+    }
+
+    // Tambahkan event listener untuk zoom pada gambar modal
+    var modalImage = document.getElementById("modalImage");
+    modalImage.addEventListener('click', function() {
+        // Toggle zooming on image click
+        if (modalImage.classList.contains('zoomed')) {
+            modalImage.classList.remove('zoomed');
+        } else {
+            modalImage.classList.add('zoomed');
+        }
+    });
+</script>
+
+{% endblock %}
